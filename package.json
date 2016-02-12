@@ -1,0 +1,28 @@
+{
+  "name": "aftership-test",
+  "version": "0.1.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrbgit/aftership-test.git"
+  },
+  "author": "Michael Bowen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mrbgit/aftership-test/issues"
+  },
+  "homepage": "https://github.com/mrbgit/aftership-test#readme",
+  "dependencies": {
+    "aftership": "^5.3.0",
+    "body-parser": "^1.15.0",
+    "cli-color": "^1.1.0",
+    "dotenv": "^2.0.0",
+    "express": "^4.13.4",
+    "path": "^0.12.7"
+  }
+}
