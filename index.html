@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- META -->
+  <title>Aftership NODE API Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="" />
+  <!-- CSS -->
+</head>
+<body>
+  <main>
+    <section>
+      <form id="trackingNumberForm" action="/trackshipment" method="POST">
+        <label for="trackingNumber">Tracking Number</label>
+        <input id="trackingNumber" name="trackingNumber" type="text submit" required />
+        <button type="submit">Submit</button>
+      </form>
+      <div id="shippingInfo">
+      </div>
+    </section>
+  </main>
+  <!-- Javascript -->
+  <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.min.js"></script>
+  <script type="text/javascript" src="./js/shipping-info.js">  </script>
+</body>
+</html>
