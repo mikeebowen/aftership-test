@@ -33,6 +33,6 @@ $(function () {
           $shippingInfo.html(shippingDataOutput);
         }
       }
-    })
-  })
-})
+    });
+  });
+});

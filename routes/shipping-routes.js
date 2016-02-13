@@ -14,13 +14,34 @@ module.exports = function (router) {
     router.use(bodyparser.urlencoded({
       extended: true
   }));
+
+    let body = {
+      'tracking': {
+        'tracking_number': '1ZA9Y7170310894713 '
+      }
+    };
+
+    router.get('/hello', function (req, res) {
+      aftership.call('POST', '/trackings', {
+        body: body
+      }, function (err, result) {
+        if (err) {
+          res.status(500).json({msg: 'internal server error'});
+          console.error(err);
+        } else {
+
+          res.end(result);
+        }
+      });
+      
+    })
   
   router.get('/couriers', function (req, res) {
     aftership.call('post', '/trackings', {
       body: body
     }, function (err, result) {
         if (err) {
-          console.error(err);
+          console.log(err);
           res.status(500).json({msg: 'Internal server error'});
         } else {
           res.json(result);
@@ -43,7 +64,7 @@ module.exports = function (router) {
         console.error(err);
         res.status(500).json({msg: 'Internal server error'});
       } else {
-        res.json(result);
+        res.status(200).writeHead({'Access-Control-Allow-Origin': '*'}).json(result);
       }
     });
   });
