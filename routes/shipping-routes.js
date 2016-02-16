@@ -14,27 +14,6 @@ module.exports = function (router) {
     router.use(bodyparser.urlencoded({
       extended: true
   }));
-
-    let body = {
-      'tracking': {
-        'tracking_number': '1ZA9Y7170310894713 '
-      }
-    };
-
-    router.get('/hello', function (req, res) {
-      aftership.call('POST', '/trackings', {
-        body: body
-      }, function (err, result) {
-        if (err) {
-          res.status(500).json({msg: 'internal server error'});
-          console.error(err);
-        } else {
-
-          res.end(result);
-        }
-      });
-      
-    })
   
   router.get('/couriers', function (req, res) {
     aftership.call('post', '/trackings', {
@@ -64,39 +43,48 @@ module.exports = function (router) {
         console.error(err);
         res.status(500).json({msg: 'Internal server error'});
       } else {
-        res.status(200).writeHead({'Access-Control-Allow-Origin': '*'}).json(result);
+        // res.status(200).setHeader({'Access-Control-Allow-Origin', '*'}).json(result);
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.json(result);
       }
     });
   });
-  
+
   router.post('/trackshipment', function (req, res) {
-    var reqBody = {'tracking' : {'tracking_number': req.body.trackingNumber}}
-    // console.log(reqBody);
-   /* aftership.call('get', '/trackings', 
-      body: reqBody, 
-      function (err, result) {
-        if (err) {
-          console.error(err);
-          res.status(500).json({msg: 'Internal server error'});
-        } else {
-          res.json(result);
-        }
-      })*/
-    // console.log(req.body);
-    /*aftership.call('POST', '/trackings', {
-      body: body
-    }, function (err, result) {
-      console.log(result);
-    });*/
-    aftership.call('get', '/trackings', {
+    var reqBody = {'tracking' : {'tracking_number': req.body.trackingNumber, 'slug' : ''}};
+    var shippingInfo;
+    var theSlug = '';
+    var theTrackingNumber = req.body.trackingNumber;
+    
+    aftership.call('post', '/trackings', {
       body: reqBody
     }, function (err, result) {
-      // Your code here 
-     /*for (var key in result) {
-      console.log(result[meta]);
-     }*/
-     res.json(result);
+      
+      if (err && err.code !== 4003) {
+        res.status(500).json({msg: 'Internal server error'});
+      }
+
+      if (err && err.code === 4003) {
+        reqBody.tracking.slug = err.data.tracking.slug; 
+      } else {
+        reqBody.tracking.slug = result.data.tracking.slug;
+      }
+      aftership.call('GET', '/last_checkpoint/' + reqBody.tracking.slug + '/' + reqBody.tracking.tracking_number, function (err, result) {
+        // Your code here
+        if (err) {
+          console.log(err);
+          res.status(500).json({msg: 'Internal server error'});
+        } else {
+          console.log(result);
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.json(result); 
+          
+        }
+
+      });
     });
-  
+    console.log(theSlug);
   });
+
+ 
 }
