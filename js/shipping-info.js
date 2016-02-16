@@ -3,36 +3,26 @@
 $(function () {
   var $trackingNumberForm = $('#trackingNumberForm');
   var $shippingInfo = $('#shippingInfo');
-  var shippingDataOutput = '';
   var itemNum = 1;
+
 
   $trackingNumberForm.submit(function (e) {
     e.preventDefault();
     var $form = $(this);
     var $formData = $form.serialize();
     var $url = $form.attr('action');
+    var shippingDataOutput = '';
 
-      // alert($formData);
+      // console.log($formData);
     $.post($url, $formData)
     .done(function (data) {
-      // console.log(data.data.page);
+      // console.log(data);
+      console.log(data.data.checkpoint);
       for (var key in data.data) {
-        for (var key2 in data.data[key]) {
-          // console.log(data.data[key][key2]);
-          for (var key3 in data.data[key][key2]) {
-            // console.log(data.data[key][key2][key3]);
-            for (var key4 in data.data[key][key2][key3]) {
-              if (typeof data.data[key][key2][key3][key4] === 'object') {
-                // console.log(data.data[key][key2][key3][key4]);
-                shippingDataOutput += '<h2>Item Number: ' + itemNum + '</h2><ul><li>Carrier: ' + data.data[key][key2][key3][key4].slug + '</li><li>Location: ' + data.data[key][key2][key3][key4].location + '</li><li>Status: ' + data.data[key][key2][key3][key4].message + '</li></ul>';
-                itemNum += 1;
-              };
-            }
-          }
-          // console.log(shippingDataOutput);
-          $shippingInfo.html(shippingDataOutput);
-        }
+        shippingDataOutput = '<h2>Tracking Number :' + data.data.tracking_number + '</h2><ul><li>Carrier : ' +  data.data.slug + '</li><li>Status : ' + data.data.tag + '</li><li>Last Check in Location: ' + data.data.checkpoint.city + ', ' + data.data.checkpoint.state + ', ' + data.data.checkpoint.zip + ', ' + data.data.checkpoint.country_name + '</li><li>Last Check in Time : ' + data.data.checkpoint.checkpoint_time + '</li></ul>';
       }
-    })
-  })
-})
+      $shippingInfo.prepend(shippingDataOutput);
+      $form[0].reset();
+      });
+  });
+});
