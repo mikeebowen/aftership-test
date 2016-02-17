@@ -23,7 +23,7 @@ $(function () {
       }
       if (data.msg !== 'Internal server error') {
         for (var key in data.data) {
-          shippingDataOutput = '<h2>Tracking Number : ' + data.data.tracking_number + '</h2><ul><li>Carrier : ' +  data.data.slug + '</li><li>Status : ' + data.data.tag + '</li><li>Last Check in Location: ' + data.data.checkpoint.city + ', ' + data.data.checkpoint.state + ', ' + data.data.checkpoint.zip + ', ' + data.data.checkpoint.country_name + '</li><li>Last Check in Time : ' + data.data.checkpoint.checkpoint_time + '</li></ul>';
+          shippingDataOutput = '<div id="' + 'itemNum' + '"><h2>Tracking Number : ' + data.data.tracking_number + '</h2><ul><li>Carrier : ' +  data.data.slug + '</li><li>Status : ' + data.data.tag + '</li><li>Last Check in Location: ' + data.data.checkpoint.city + ', ' + data.data.checkpoint.state + ', ' + data.data.checkpoint.zip + ', ' + data.data.checkpoint.country_name + '</li><li>Last Check in Time : ' + data.data.checkpoint.checkpoint_time + '</li></ul><button type="button" onclick="$(this).parent().remove()">Remove</button></div>';
         }
 
       }
