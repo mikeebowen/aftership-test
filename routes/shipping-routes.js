@@ -15,28 +15,6 @@ module.exports = function (router) {
       extended: true
   }));
   
-  router.get('/couriers', function (req, res) {
-    aftership.call('post', '/trackings', {
-      body: body
-    }, function (err, result) {
-        if (err) {
-          console.log(err);
-          res.json({msg: 'Internal server error'}).status(500);
-        } else {
-          res.json(result);
-      }
-    });
-  });
-  
-  router.get('/allshipments', function (req, res) {
-    aftership.call('get', '/trackings', {
-      query: query
-    }, 
-    function (err, result) {
-      res.json(result) ;
-    });
-  });
-  
   router.get('/trackpackage/:slug/:tracking_number', function (req, res) {
     aftership.call('get', '/trackings/' + req.params.slug + '/' + req.params.tracking_number, function (err, result) {
       if (err) {
@@ -74,7 +52,6 @@ module.exports = function (router) {
       }
       if (!err || err.code === 4003) {
         aftership.call('get', '/last_checkpoint/' + reqBody.tracking.slug + '/' + reqBody.tracking.tracking_number, function (err, result) {
-          // Your code here
           if (err) {
             console.log(err);
             res.json({msg: 'Internal server error'}).status(500);
@@ -82,12 +59,9 @@ module.exports = function (router) {
           if (!err) {
             console.log(result);
             res.setHeader('Access-Control-Allow-Origin', '*');
-            res.json(result).status(202); 
-            
+            res.json(result).status(202);            
           }
-
         });
-        
       }
     });
   });
