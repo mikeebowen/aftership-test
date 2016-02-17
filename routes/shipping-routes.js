@@ -14,19 +14,6 @@ module.exports = function (router) {
     router.use(bodyparser.urlencoded({
       extended: true
   }));
-  
-  router.get('/trackpackage/:slug/:tracking_number', function (req, res) {
-    aftership.call('get', '/trackings/' + req.params.slug + '/' + req.params.tracking_number, function (err, result) {
-      if (err) {
-        console.error(err);
-        res.json({msg: 'Internal server error'}).status(500);
-      } else {
-        // res.status(200).setHeader({'Access-Control-Allow-Origin', '*'}).json(result);
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.json(result);
-      }
-    });
-  });
 
   router.post('/trackshipment', function (req, res) {
     var reqBody = {'tracking' : {'tracking_number': req.body.trackingNumber, 'slug' : ''}};
@@ -39,12 +26,11 @@ module.exports = function (router) {
     }, function (err, result) {
       
       if (err && err.code !== 4003) {
-        // console.log('not 4003    ', err);
+        console.log(err);
         res.json({msg: 'Internal server error'}).status(500);
       }
 
       if (err && err.code === 4003) {
-        // console.log('is 4003 : ', err);
         reqBody.tracking.slug = err.data.tracking.slug; 
       } 
       if (!err) {
@@ -53,11 +39,10 @@ module.exports = function (router) {
       if (!err || err.code === 4003) {
         aftership.call('get', '/trackings/' + reqBody.tracking.slug + '/' + reqBody.tracking.tracking_number, function (err, result) {
           if (err) {
-            console.log('aftership  ', err);
+            console.log(err);
             res.json({msg: 'Internal server error'}).status(500);
           } 
           if (!err) {
-            console.log(result);
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.json(result).status(202);            
           }
