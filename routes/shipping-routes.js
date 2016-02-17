@@ -21,7 +21,7 @@ module.exports = function (router) {
     }, function (err, result) {
         if (err) {
           console.log(err);
-          res.status(500).json({msg: 'Internal server error'});
+          res.json({msg: 'Internal server error'}).status(500);
         } else {
           res.json(result);
       }
@@ -41,7 +41,7 @@ module.exports = function (router) {
     aftership.call('get', '/trackings/' + req.params.slug + '/' + req.params.tracking_number, function (err, result) {
       if (err) {
         console.error(err);
-        res.status(500).json({msg: 'Internal server error'});
+        res.json({msg: 'Internal server error'}).status(500);
       } else {
         // res.status(200).setHeader({'Access-Control-Allow-Origin', '*'}).json(result);
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -61,29 +61,35 @@ module.exports = function (router) {
     }, function (err, result) {
       
       if (err && err.code !== 4003) {
-        res.status(500).json({msg: 'Internal server error'});
+        console.log('not 4003    ', err);
+        res.json({msg: 'Internal server error'}).status(500);
       }
 
       if (err && err.code === 4003) {
+        console.log(err);
         reqBody.tracking.slug = err.data.tracking.slug; 
-      } else {
+      } 
+      if (!err) {
         reqBody.tracking.slug = result.data.tracking.slug;
       }
-      aftership.call('GET', '/last_checkpoint/' + reqBody.tracking.slug + '/' + reqBody.tracking.tracking_number, function (err, result) {
-        // Your code here
-        if (err) {
-          console.log(err);
-          res.status(500).json({msg: 'Internal server error'});
-        } else {
-          console.log(result);
-          res.setHeader('Access-Control-Allow-Origin', '*');
-          res.json(result); 
-          
-        }
+      if (!err || err.code === 4003) {
+        aftership.call('get', '/last_checkpoint/' + reqBody.tracking.slug + '/' + reqBody.tracking.tracking_number, function (err, result) {
+          // Your code here
+          if (err) {
+            console.log(err);
+            res.json({msg: 'Internal server error'}).status(500);
+          } 
+          if (!err) {
+            console.log(result);
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.json(result).status(202); 
+            
+          }
 
-      });
+        });
+        
+      }
     });
-    console.log(theSlug);
   });
 
  
