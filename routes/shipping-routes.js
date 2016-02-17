@@ -21,7 +21,7 @@ module.exports = function (router) {
     }, function (err, result) {
         if (err) {
           console.log(err);
-          res.status(500).json({msg: 'Internal server error'});
+          res.json({msg: 'Internal server error'}).status(500);
         } else {
           res.json(result);
       }
@@ -41,7 +41,7 @@ module.exports = function (router) {
     aftership.call('get', '/trackings/' + req.params.slug + '/' + req.params.tracking_number, function (err, result) {
       if (err) {
         console.error(err);
-        res.status(500).json({msg: 'Internal server error'});
+        res.json({msg: 'Internal server error'}).status(500);
       } else {
         // res.status(200).setHeader({'Access-Control-Allow-Origin', '*'}).json(result);
         res.setHeader('Access-Control-Allow-Origin', '*');
