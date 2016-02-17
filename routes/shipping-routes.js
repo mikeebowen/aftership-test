@@ -39,21 +39,21 @@ module.exports = function (router) {
     }, function (err, result) {
       
       if (err && err.code !== 4003) {
-        console.log('not 4003    ', err);
+        // console.log('not 4003    ', err);
         res.json({msg: 'Internal server error'}).status(500);
       }
 
       if (err && err.code === 4003) {
-        console.log(err);
+        // console.log('is 4003 : ', err);
         reqBody.tracking.slug = err.data.tracking.slug; 
       } 
       if (!err) {
         reqBody.tracking.slug = result.data.tracking.slug;
       }
       if (!err || err.code === 4003) {
-        aftership.call('get', '/last_checkpoint/' + reqBody.tracking.slug + '/' + reqBody.tracking.tracking_number, function (err, result) {
+        aftership.call('get', '/trackings/' + reqBody.tracking.slug + '/' + reqBody.tracking.tracking_number, function (err, result) {
           if (err) {
-            console.log(err);
+            console.log('aftership  ', err);
             res.json({msg: 'Internal server error'}).status(500);
           } 
           if (!err) {
